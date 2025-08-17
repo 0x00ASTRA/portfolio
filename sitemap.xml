@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/</loc>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/about/</loc>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/blog/</loc>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/blog/raylib-zig-intro/</loc>
+        <lastmod>2025-05-20</lastmod>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/projects/</loc>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/projects/astra-engine/</loc>
+        <lastmod>2025-06-20</lastmod>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/projects/ue5-interaction-system/</loc>
+        <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+        <loc>https://0x00ASTRA.github.io/portfolio/resume/</loc>
+    </url>
+</urlset>

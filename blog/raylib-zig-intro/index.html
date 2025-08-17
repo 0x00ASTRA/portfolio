@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="https://0x00ASTRA.github.io/portfolio/css/tui.css">
+    <link rel="stylesheet" href="https://0x00ASTRA.github.io/portfolio/css/particles.css">
+</head>
+<body>
+    <header>
+        <div class="bio-header">
+            <img src="https://unavatar.io/twitter/AstraeusAJ" alt="Astra Blondell" class="portrait">
+            <div class="bio-info">
+                <div class="input-box">
+                    <h1> > Astra Blondell<span class="cursor">_</span></h1>
+                </div>
+                <p class="bio-title">Systems Engineer</p>
+                <nav>
+                    <a href="https://0x00ASTRA.github.io/portfolio/">Home</a>
+                    <a href="https://0x00ASTRA.github.io/portfolio/about/">About</a>
+                    <a href="https://0x00ASTRA.github.io/portfolio/resume/">Resume</a>
+                    <a href="https://0x00ASTRA.github.io/portfolio/projects/">Projects</a>
+                    <a href="https://0x00ASTRA.github.io/portfolio/blog/">Blog</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        
+<div class="container">
+    <article>
+        <header>
+            <div class="input-box"><h1>Getting Started With raylib and Zig<span class="cursor">_</span></h1></div>
+            
+            <p class="date">2025-05-20</p>
+            
+        </header>
+        
+        <div class="content">
+            <h2 id="introduction">Introduction</h2>
+<p>This guide will help you get a basic project setup using the zig programming language with raylib-zig as a dependency. From there you will create a basic window using raylib and render some text. This is meant to be a very simple guide just to get a bare minimum project working.</p>
+<h2 id="project-setup">Project Setup</h2>
+<p>To get started making our own game using Zig and raylib, we will need to ensure our environment is configured properly and project is initialized correctly.</p>
+<h3 id="update-zig">Update Zig</h3>
+<p>First ensure that you're using an updated version of Zig or that your version will work with the raylib-zig dependency.</p>
+<pre data-lang="bash" style="background-color:#0f1419;color:#bfbab0;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#ffb454;">zvm</span><span> i master </span><span style="color:#f29668;">&amp;&amp; </span><span style="color:#ffb454;">zvm</span><span> use master
+</span></code></pre>
+<p>If you want to follow along exactly with me at the time of writing this, then you can use:</p>
+<pre data-lang="bash" style="background-color:#0f1419;color:#bfbab0;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#ffb454;">zvm</span><span> i 0.14.0 </span><span style="color:#f29668;">&amp;&amp; </span><span style="color:#ffb454;">zvm</span><span> use 0.14.0
+</span></code></pre>
+<p><strong>🚧⚠️ WARNING ⚠️🚧</strong> <em>Make sure you don't have Zig installed through your distros package manager</em>. </p>
+<p><em><strong>If you do:</strong></em> Uninstall it and use <a href="https://www.zvm.app/">zvm</a> (Zig Version Manager) instead.
+<a href="https://github.com/tristanisham/zvm">zvm repo :FabGithub:</a> </p>
+<p>Then just make sure zvm is added to path. You can add it by editing <code>~/.bashrc</code> or <code>~/.zshrc</code> depending on which shell you use.</p>
+<pre data-lang="sh" style="background-color:#0f1419;color:#bfbab0;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="font-style:italic;color:#5c6773;"># add Zig Version Manager to PATH
+</span><span style="color:#ff7733;">export </span><span>PATH</span><span style="color:#f29668;">=</span><span style="color:#c2d94c;">&quot;$</span><span>HOME</span><span style="color:#c2d94c;">/.zvm/bin/:$</span><span>PATH</span><span style="color:#c2d94c;">&quot;
+</span></code></pre>
+<h3 id="initialize-the-project">Initialize the project</h3>
+<p>Once that's done create your project dir and initialize it. <em>(Replace <code>raylib_zig_game</code> with whatever you want your project name to be).</em></p>
+<pre data-lang="sh" style="background-color:#0f1419;color:#bfbab0;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#ffb454;">mkdir</span><span> raylib_zig_game
+</span><span style="color:#f07178;">cd</span><span> raylib_zig_game
+</span><span style="color:#ffb454;">mkdir</span><span> src/
+</span><span style="color:#ffb454;">touch</span><span> build.zig </span><span style="color:#f29668;">&amp;&amp; </span><span style="color:#ffb454;">touch</span><span> src/main.zig
+</span></code></pre>
+<h3 id="raylib-zig-dependency">raylib-zig dependency</h3>
+<p>We also need to fetch the raylib-zig dependency:</p>
+<pre data-lang="sh" style="background-color:#0f1419;color:#bfbab0;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#ffb454;">zig</span><span> fetch</span><span style="color:#f29718;"> --save</span><span> git+https://github.com/Not-Nik/raylib-zig#devel
+</span></code></pre>
+<p>Or if you're following along exactly with me:</p>
+<pre data-lang="sh" style="background-color:#0f1419;color:#bfbab0;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#ffb454;">zig</span><span> fetch</span><span style="color:#f29718;"> --save</span><span> git+https://github.com/Not-Nik/raylib-zig</span><span style="color:#f29668;">?</span><span>ref=devel#3bf08a304cfe2baf839705063ff999b8d8bc8c54
+</span></code></pre>
+<h3 id="configure-build-script">Configure build script</h3>
+<p>Now we need to configure our build script to actually build the project and link raylib-zig. Open <code>build.zig</code> in your editor of choice,
+<em>(e.g., <code>nvim build.zig</code>)</em>, and set it up like this:</p>
+<p><em><strong>build.zig</strong></em>:</p>
+<pre data-lang="zig" style="background-color:#0f1419;color:#bfbab0;" class="language-zig "><code class="language-zig" data-lang="zig"><span style="color:#ff7733;">const</span><span> std </span><span style="color:#f29668;">= </span><span style="color:#ff7733;">@import</span><span>(</span><span style="color:#c2d94c;">&quot;std&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span style="font-style:italic;color:#5c6773;">// import raylib-zig build script. This is needed to set gl version
+</span><span style="color:#ff7733;">const</span><span> rlz </span><span style="color:#f29668;">= </span><span style="color:#ff7733;">@import</span><span>(</span><span style="color:#c2d94c;">&quot;raylib_zig&quot;</span><span>)</span><span style="color:#bfbab0cc;">; 
+</span><span>
+</span><span style="color:#ff7733;">pub fn </span><span style="color:#ffb454;">build</span><span>(</span><span style="color:#f29718;">b</span><span style="color:#bfbab0cc;">: </span><span style="color:#f29668;">*</span><span style="color:#ff7733;">std.Build</span><span>) </span><span style="color:#f29668;">!</span><span style="color:#ff7733;">void </span><span>{
+</span><span>    </span><span style="color:#ff7733;">const</span><span> target </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">standardTargetOptions</span><span>(.{})</span><span style="color:#bfbab0cc;">;
+</span><span>    </span><span style="color:#ff7733;">const</span><span> optimize </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">standardOptimizeOption</span><span>(.{})</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>	</span><span style="font-style:italic;color:#5c6773;">// Create the executable
+</span><span>    </span><span style="color:#ff7733;">const</span><span> exe </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">addExecutable</span><span>(.{
+</span><span>        .root_source_file </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">path</span><span>(</span><span style="color:#c2d94c;">&quot;src/main.zig&quot;</span><span>)</span><span style="color:#bfbab0cc;">,
+</span><span>        .name </span><span style="color:#f29668;">= </span><span style="color:#c2d94c;">&quot;game&quot;</span><span style="color:#bfbab0cc;">,
+</span><span>        .target </span><span style="color:#f29668;">=</span><span> target</span><span style="color:#bfbab0cc;">,
+</span><span>        .optimize </span><span style="color:#f29668;">=</span><span> optimize</span><span style="color:#bfbab0cc;">,
+</span><span>    })</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>	</span><span style="font-style:italic;color:#5c6773;">// Add raylib_zig as a dependency
+</span><span>    </span><span style="color:#ff7733;">const</span><span> raylib_dep </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">dependency</span><span>(</span><span style="color:#c2d94c;">&quot;raylib_zig&quot;</span><span style="color:#bfbab0cc;">,</span><span> .{
+</span><span>        .target </span><span style="color:#f29668;">=</span><span> target</span><span style="color:#bfbab0cc;">,
+</span><span>        .optimize </span><span style="color:#f29668;">=</span><span> optimize</span><span style="color:#bfbab0cc;">,
+</span><span>        .shared </span><span style="color:#f29668;">= </span><span style="color:#f29718;">true</span><span style="color:#bfbab0cc;">,
+</span><span>        </span><span style="font-style:italic;color:#5c6773;">// set open version for compatibility. This is for if GLFW fails to get an openGL context even though you have a newer GL version. Try building without this set.
+</span><span>        .opengl_version </span><span style="color:#f29668;">=</span><span> rlz.OpenglVersion.gl_2_1</span><span style="color:#bfbab0cc;">,
+</span><span>    })</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>    </span><span style="color:#ff7733;">const</span><span> raylib </span><span style="color:#f29668;">=</span><span> raylib_dep.</span><span style="color:#ffb454;">module</span><span>(</span><span style="color:#c2d94c;">&quot;raylib&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>    </span><span style="color:#ff7733;">const</span><span> raygui </span><span style="color:#f29668;">=</span><span> raylib_dep.</span><span style="color:#ffb454;">module</span><span>(</span><span style="color:#c2d94c;">&quot;raygui&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>    </span><span style="color:#ff7733;">const</span><span> raylib_artifact </span><span style="color:#f29668;">=</span><span> raylib_dep.</span><span style="color:#ffb454;">artifact</span><span>(</span><span style="color:#c2d94c;">&quot;raylib&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>	</span><span style="font-style:italic;color:#5c6773;">// link raylib to our executable
+</span><span>    exe.</span><span style="color:#ffb454;">linkLibrary</span><span>(raylib_artifact)</span><span style="color:#bfbab0cc;">;
+</span><span>    exe.root_module.</span><span style="color:#ffb454;">addImport</span><span>(</span><span style="color:#c2d94c;">&quot;raylib&quot;</span><span style="color:#bfbab0cc;">,</span><span> raylib)</span><span style="color:#bfbab0cc;">;
+</span><span>    exe.root_module.</span><span style="color:#ffb454;">addImport</span><span>(</span><span style="color:#c2d94c;">&quot;raygui&quot;</span><span style="color:#bfbab0cc;">,</span><span> raygui)</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>    b.</span><span style="color:#ffb454;">installArtifact</span><span>(exe)</span><span style="color:#bfbab0cc;">;
+</span><span>    
+</span><span>	</span><span style="font-style:italic;color:#5c6773;">// add a run step
+</span><span>    </span><span style="color:#ff7733;">const</span><span> run_exe </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">addRunArtifact</span><span>(exe)</span><span style="color:#bfbab0cc;">;
+</span><span>    </span><span style="color:#ff7733;">const</span><span> run_step </span><span style="color:#f29668;">=</span><span> b.</span><span style="color:#ffb454;">step</span><span>(</span><span style="color:#c2d94c;">&quot;run&quot;</span><span style="color:#bfbab0cc;">, </span><span style="color:#c2d94c;">&quot;Run the application&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>    run_step.</span><span style="color:#ffb454;">dependOn</span><span>(</span><span style="color:#f29668;">&amp;</span><span>run_exe.step)</span><span style="color:#bfbab0cc;">;
+</span><span>}
+</span></code></pre>
+<h3 id="setup-the-source-files">Setup the source files</h3>
+<p>Now that our build script is configured and raylib-zig is a module, we can get a basic window created to ensure everything is working. To do so, open <code>src/main.zig</code> in your editor of choice and follow along:</p>
+<h4 id="basic-window">Basic Window</h4>
+<p>We will create the window using raylib and draw some text to the screen.</p>
+<p><em><strong>src/main.zig</strong></em>:</p>
+<pre data-lang="zig" style="background-color:#0f1419;color:#bfbab0;" class="language-zig "><code class="language-zig" data-lang="zig"><span style="color:#ff7733;">const</span><span> std </span><span style="color:#f29668;">= </span><span style="color:#ff7733;">@import</span><span>(</span><span style="color:#c2d94c;">&quot;std&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span style="color:#ff7733;">const</span><span> rl </span><span style="color:#f29668;">= </span><span style="color:#ff7733;">@import</span><span>(</span><span style="color:#c2d94c;">&quot;raylib&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span style="color:#ff7733;">pub fn </span><span style="color:#ffb454;">main</span><span>() </span><span style="color:#ff7733;">anyerror</span><span style="color:#f29668;">!</span><span style="color:#ff7733;">void </span><span>{
+</span><span>	</span><span style="color:#ff7733;">const </span><span>screen_w</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f29718;">800</span><span style="color:#bfbab0cc;">;
+</span><span>	</span><span style="color:#ff7733;">const </span><span>screen_h</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f29718;">600</span><span style="color:#bfbab0cc;">;
+</span><span>	</span><span style="color:#ff7733;">const </span><span>target_fps</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f29718;">60</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>	</span><span style="font-style:italic;color:#5c6773;">// initialize the window
+</span><span>	rl.</span><span style="color:#ffb454;">initWindow</span><span>(screen_w</span><span style="color:#bfbab0cc;">,</span><span> screen_h</span><span style="color:#bfbab0cc;">, </span><span style="color:#c2d94c;">&quot;&lt;Your Application Title Here&gt;&quot;</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>	</span><span style="color:#ff7733;">defer</span><span> rl.</span><span style="color:#ffb454;">closeWindow</span><span>()</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>	rl.</span><span style="color:#ffb454;">setTargetFPS</span><span>(target_fps)</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>	</span><span style="font-style:italic;color:#5c6773;">// main application loop
+</span><span>	</span><span style="color:#ff7733;">while</span><span>(</span><span style="color:#f29668;">!</span><span>rl.</span><span style="color:#ffb454;">windowShouldClose</span><span>()) {
+</span><span>		rl.</span><span style="color:#ffb454;">beginDrawing</span><span>()</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">defer</span><span> rl.</span><span style="color:#ffb454;">endDrawing</span><span>()</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>		rl.</span><span style="color:#ffb454;">clearBackground</span><span>(.white)</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>		</span><span style="color:#ff7733;">const </span><span>cen_x</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f07178;">@divFloor</span><span>(rl.</span><span style="color:#ffb454;">getScreenWidth</span><span>()</span><span style="color:#bfbab0cc;">, </span><span style="color:#f29718;">2</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>cen_y</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f07178;">@divFloor</span><span>(rl.</span><span style="color:#ffb454;">getScreenHeight</span><span>()</span><span style="color:#bfbab0cc;">, </span><span style="color:#f29718;">2</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>font_size</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f29718;">28</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>font_width</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f07178;">@divFloor</span><span>(font_size</span><span style="color:#bfbab0cc;">, </span><span style="color:#f29718;">2</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const</span><span> font_color </span><span style="color:#f29668;">=</span><span> rl.Color.black</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>txt</span><span style="color:#bfbab0cc;">:</span><span> [:</span><span style="color:#f29718;">0</span><span>]</span><span style="color:#ff7733;">const u8 </span><span style="color:#f29668;">= </span><span style="color:#c2d94c;">&quot;I made a window with raylib-zig!&quot;</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>txt_len</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">= </span><span style="color:#f07178;">@intCast</span><span>(txt.len)</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>txt_x</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">=</span><span> cen_x </span><span style="color:#f29668;">- </span><span style="color:#f07178;">@divFloor</span><span>(txt_len </span><span style="color:#f29668;">*</span><span> font_width</span><span style="color:#bfbab0cc;">, </span><span style="color:#f29718;">2</span><span>)</span><span style="color:#bfbab0cc;">;
+</span><span>		</span><span style="color:#ff7733;">const </span><span>txt_y</span><span style="color:#bfbab0cc;">: </span><span style="color:#ff7733;">i32 </span><span style="color:#f29668;">=</span><span> cen_y </span><span style="color:#f29668;">-</span><span> font_width</span><span style="color:#bfbab0cc;">;
+</span><span>
+</span><span>
+</span><span>		rl.</span><span style="color:#ffb454;">drawText</span><span>(txt</span><span style="color:#bfbab0cc;">,</span><span> txt_x</span><span style="color:#bfbab0cc;">,</span><span> txt_y</span><span style="color:#bfbab0cc;">,</span><span> font_size</span><span style="color:#bfbab0cc;">,</span><span> font_color)</span><span style="color:#bfbab0cc;">;
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<h3 id="build-and-run">Build and Run</h3>
+<p>Now that we have our source file setup, we can build and run the project:</p>
+<pre data-lang="sh" style="background-color:#0f1419;color:#bfbab0;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#ffb454;">zig</span><span> build run
+</span></code></pre>
+<p>This <em>should</em> open a window with '<em><strong>I made a window with raylib-zig</strong></em>' drawn to the screen.</p>
+<p>That's all for getting a basic window started. You can now extend this to create a full on game or application. Enjoy!</p>
+
+        </div>
+    </article>
+</div>
+
+    </main>
+    <footer>
+        <p>&copy; 2025</p>
+    </footer>
+    <script src="https://0x00ASTRA.github.io/portfolio/js/main.js"></script>
+    <script src="https://0x00ASTRA.github.io/portfolio/js/decode.js"></script>
+    <script src="https://0x00ASTRA.github.io/portfolio/js/particles.js"></script>
+</body>
+</html>

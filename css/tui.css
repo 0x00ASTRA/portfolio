@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+
+:root {
+    --bg-color: #000000;
+    --text-color: #f0f0f0;
+    --border-color: #444;
+
+    /* Gemini CLI Inspired Palette */
+    --keyword-color: #9177C7; /* Purple */
+    --function-color: #4796E3; /* Blue */
+    --string-color: #89b482;  /* Green */
+    --operator-color: #CA6673; /* Red */
+    --comment-color: #7f848e;  /* Grey */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header, footer {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+}
+
+.bio-header {
+    display: flex;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+.portrait {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-right: 2rem;
+}
+
+.input-box {
+    border: 1px solid var(--function-color);
+    padding: 0.5rem;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.bio-info h1 {
+    margin: 0;
+    color: var(--text-color);
+    overflow: hidden;
+    white-space: nowrap;
+    border: none;
+    padding: 0;
+}
+
+.bio-title {
+    margin: 1rem 0;
+    font-size: 1rem;
+    color: var(--operator-color);
+}
+
+header nav a {
+    margin-right: 1rem;
+    color: var(--keyword-color);
+    text-decoration: none;
+}
+
+main {
+    padding: 2rem 0;
+}
+
+main .input-box h1 {
+    color: var(--operator-color);
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0.1rem;
+}
+
+main h2 {
+    color: var(--keyword-color);
+}
+
+main h3 {
+    color: var(--function-color);
+}
+
+main h4, main h5, main h6 {
+    color: var(--string-color);
+}
+
+a, a:visited {
+    color: var(--comment-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--keyword-color)
+}
+
+footer {
+    border-top: 1px solid var(--border-color);
+    border-bottom: none;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--comment-color);
+}
+
+/* --- Content Styling --- */
+
+pre {
+    background-color: #1e1e1e;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+code {
+    background-color: #1e1e1e;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+}
+
+blockquote {
+    border-left: 3px solid var(--function-color);
+    padding-left: 1rem;
+    margin-left: 0;
+    color: var(--comment-color);
+    font-style: italic;
+}
+
+.download-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.button {
+    background-color: var(--function-color); /* Blue background */
+    color: var(--bg-color); /* Black text */
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--keyword-color); /* Purple on hover */
+    color: var(--text-color); /* White text on hover */
+}
+
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.cursor {
+    animation: blink 1s step-end infinite;
+}
