@@ -22,6 +22,11 @@ body {
     padding: 0;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -182,4 +187,47 @@ blockquote {
 
 .cursor {
     animation: blink 1s step-end infinite;
+}
+
+@media (max-width: 768px) {
+    .bio-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem; /* Adjust padding for smaller screens */
+    }
+
+    .portrait {
+        width: 100px; /* Smaller size for mobile */
+        height: 100px;
+        margin-right: 0; /* Remove right margin */
+        margin-bottom: 1rem; /* Add bottom margin for spacing */
+    }
+
+    header nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header nav a {
+        margin-right: 0;
+        margin-bottom: 0.5rem; /* Add some vertical spacing */
+    }
+
+    .container {
+        padding: 1rem; /* Adjust container padding */
+    }
+
+    /* Adjust font sizes for better readability on small screens */
+    .bio-info h1 {
+        font-size: 1.8rem;
+    }
+
+    .bio-title {
+        font-size: 0.9rem;
+    }
+
+    header nav a {
+        font-size: 0.9rem;
+    }
 }
