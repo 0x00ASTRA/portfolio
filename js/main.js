@@ -53,6 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resumeForm = document.getElementById('resume-form');
     if (resumeForm) {
+        // Pause decoding for resume page until form is completed
+        if (typeof isDecodingPaused !== 'undefined') {
+            isDecodingPaused = true;
+        }
         const captchaScroll = document.getElementById('captcha-scroll');
         
 
