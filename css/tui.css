@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 
 :root {
-    --bg-color: #000000;
-    --text-color: #f0f0f0;
-    --border-color: #444;
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #333333;
 
-    /* Gemini CLI Inspired Palette */
-    --keyword-color: #9177C7; /* Purple */
-    --function-color: #4796E3; /* Blue */
-    --string-color: #89b482;  /* Green */
-    --operator-color: #CA6673; /* Red */
-    --comment-color: #7f848e;  /* Grey */
+    /* Brutalist Palette */
+    --keyword-color: #333333; /* Charcoal */
+    --function-color: #333333; /* Charcoal */
+    --string-color: #333333;  /* Charcoal */
+                --operator-color: #FA0000; /* Red */
+    --comment-color: #555555;  /* Dark Grey */
 }
 
 body {
@@ -29,21 +29,34 @@ img {
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 2rem auto; /* Added margin for spacing */
     padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 10px;
+    border: 1px solid rgba(51, 51, 51, 0.1); /* Subtle border */
 }
 
 header, footer {
     border-bottom: 1px solid var(--border-color);
     padding: 1rem 0;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .bio-header {
     display: flex;
     align-items: center;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 2rem auto;
     padding: 1rem 2rem;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 10px;
+    border: 1px solid rgba(51, 51, 51, 0.1);
 }
 
 .portrait {
@@ -54,7 +67,7 @@ header, footer {
 }
 
 .input-box {
-    border: 1px solid var(--function-color);
+    border: 2px solid var(--operator-color);
     padding: 0.5rem;
     display: inline-block;
     border-radius: 3px;
@@ -124,7 +137,7 @@ footer {
 /* --- Content Styling --- */
 
 pre {
-    background-color: #1e1e1e;
+    background-color: #f5f5f5;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     padding: 1rem;
@@ -132,7 +145,7 @@ pre {
 }
 
 code {
-    background-color: #1e1e1e;
+    background-color: #f5f5f5;
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
     font-size: 0.9rem;
@@ -161,8 +174,8 @@ blockquote {
 }
 
 .button {
-    background-color: var(--function-color); /* Blue background */
-    color: var(--bg-color); /* Black text */
+    background-color: #333333; /* Black background */
+    color: #ffffff; /* White text */
     padding: 0.75rem 1.5rem;
     border-radius: 5px;
     text-decoration: none;
@@ -171,8 +184,8 @@ blockquote {
 }
 
 .button:hover {
-    background-color: var(--keyword-color); /* Purple on hover */
-    color: var(--text-color); /* White text on hover */
+    background-color: var(--operator-color); /* Red on hover */
+    color: #ffffff; /* White text on hover */
 }
 
 
@@ -230,4 +243,47 @@ blockquote {
     header nav a {
         font-size: 0.9rem;
     }
+}
+
+/* --- Resume Form --- */
+#resume-gate form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#resume-gate .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#resume-gate label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+#resume-gate input,
+#resume-gate textarea,
+#resume-gate select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background-color: #f5f5f5;
+    color: var(--text-color);
+    font-family: "JetBrains Mono", "Courier New", monospace;
+}
+
+#resume-gate .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+#resume-gate .radio-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }

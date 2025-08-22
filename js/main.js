@@ -48,4 +48,33 @@ document.addEventListener('DOMContentLoaded', () => {
             document.head.appendChild(styleSheet);
         }
     });
+
+    
+
+    const resumeForm = document.getElementById('resume-form');
+    if (resumeForm) {
+        const captchaScroll = document.getElementById('captcha-scroll');
+        
+
+        resumeForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const purpose = document.getElementById('purpose-select').value;
+            const selectedHuman = captchaScroll.value;
+
+            let captchaPassed = false;
+            if (selectedHuman === 'no') { // If not a malevolent AI, then captcha passes
+                captchaPassed = true;
+            }
+
+            if (purpose && captchaPassed) {
+                document.getElementById('resume-gate').style.display = 'none';
+                document.getElementById('resume-links').style.display = 'block';
+                if (window.startResumePageDecoding) {
+                    window.startResumePageDecoding();
+                }
+            } else {
+                alert('Not today, Clanker!');
+            }
+        });
+    }
 });

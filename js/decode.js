@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let isDecodingPaused = false;
+    const resumeForm = document.getElementById('resume-form');
+    if (resumeForm) {
+        isDecodingPaused = true;
+        window.startResumePageDecoding = () => {
+            isDecodingPaused = false;
+        };
+    }
+
     const elementsToAnimate = Array.from(document.querySelectorAll(
         '.content h1, .content h2, .content h3, .content p, .content a, .content span, .content li'
     ));
@@ -31,6 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 
+    // Set initial encoded state for all elements
+    animations.forEach(animation => {
+        if (animation.unrevealedIndices && animation.unrevealedIndices.length > 0) {
+            const { element, originalText, revealed, display } = animation;
+            for (let i = 0; i < revealed.length; i++) {
+                display[i] = revealed[i] ? originalText[i] : "01"[Math.random() * 2 | 0];
+            }
+            element.textContent = display.join('');
+        }
+    });
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             const animation = animations.find(a => a.element === entry.target);
@@ -57,23 +77,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         animations.forEach(animation => {
             if (!animation.isAnimating || animation.unrevealedIndices.length === 0) {
-                animation.element.textContent = animation.originalText;
+                if (animation.unrevealedIndices.length === 0) {
+                    animation.element.textContent = animation.originalText;
+                }
                 return;
             }
 
             allComplete = false;
             const { element, originalText, revealed, unrevealedIndices, display } = animation;
-            const charsPerFrame = Math.max(1, Math.ceil(unrevealedIndices.length / (targetDuration / frameRate)));
 
+            // Always do the glitching
             for (let i = 0; i < revealed.length; i++) {
                 display[i] = revealed[i] ? originalText[i] : "01"[Math.random() * 2 | 0];
             }
             element.textContent = display.join('');
 
-            for (let i = 0; i < charsPerFrame && unrevealedIndices.length > 0; i++) {
-                const randIdx = Math.random() * unrevealedIndices.length | 0;
-                revealed[unrevealedIndices[randIdx]] = 1;
-                unrevealedIndices.splice(randIdx, 1);
+            // Only do the decoding if not paused
+            if (!isDecodingPaused) {
+                const charsPerFrame = Math.max(1, Math.ceil(unrevealedIndices.length / (targetDuration / frameRate)));
+                for (let i = 0; i < charsPerFrame && unrevealedIndices.length > 0; i++) {
+                    const randIdx = Math.random() * unrevealedIndices.length | 0;
+                    revealed[unrevealedIndices[randIdx]] = 1;
+                    unrevealedIndices.splice(randIdx, 1);
+                }
             }
         });
 

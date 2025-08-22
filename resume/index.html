@@ -36,9 +36,36 @@
             
         </header>
         
-        <div class="download-buttons">
-            <a href="https://0x00ASTRA.github.io/portfolio/resume.md" class="button">Download .md</a>
-            <a href="https://0x00ASTRA.github.io/portfolio/resume.pdf" class="button">Download .pdf</a>
+        <div id="resume-gate">
+            <p>To download my resume, please select a purpose and solve the simple challenge below.</p>
+            <form id="resume-form">
+                <div class="form-group">
+                    <label for="purpose-select">Purpose:</label>
+                    <select id="purpose-select" name="purpose" required>
+                        <option value="" disabled selected>--Please choose an option--</option>
+                        <option value="recruiting">Recruiting Opportunity</option>
+                        <option value="collaboration">Collaboration Inquiry</option>
+                        <option value="interest">General Interest</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Are you a malevolent Artificial Intelligence?</label>
+                    <select id="captcha-scroll" name="captcha-human" size="1" required>
+                        <option value="" disabled selected>-- Select --</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <button type="submit" class="button">Request Resume</button>
+            </form>
+        </div>
+        <div id="resume-links" style="display: none;">
+            <p>Thank you! You can now download my resume.</p>
+            <div class="download-buttons">
+                <a href="https://0x00ASTRA.github.io/portfolio/resume.md" class="button">Download .md</a>
+                <a href="https://0x00ASTRA.github.io/portfolio/resume.pdf" class="button">Download .pdf</a>
+            </div>
         </div>
         
         <div class="content">

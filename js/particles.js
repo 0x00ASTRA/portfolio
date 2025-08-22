@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.insertBefore(canvas, document.body.firstChild);
 
     const ctx = canvas.getContext('2d');
-    const baseOpacity = 0.4;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -15,43 +14,72 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    const clusterCount = 15;
-    const particlesPerCluster = 10;
+    const clusterCount = 25;
+    const particlesPerCluster = 20;
     let allParticles = [];
     let connections = [];
+    let sparks = [];
 
+    // --- Spark Class ---
+    class Spark {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.vx = (Math.random() - 0.5) * 3;
+            this.vy = (Math.random() - 0.5) * 3;
+            this.lifetime = Math.random() * 100 + 50;
+            this.age = 0;
+            this.size = Math.random() * 2 + 1;
+        }
+
+        update(delta) {
+            this.age += delta;
+            this.x += this.vx;
+            this.y += this.vy;
+        }
+
+        draw() {
+            const opacity = 1 - (this.age / this.lifetime);
+                                                ctx.fillStyle = `rgba(250, 0, 0, ${opacity})`; // Red
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+    }
+
+    // --- Particle Class ---
     class Particle {
         constructor(cluster) {
             this.cluster = cluster;
-            this.x = Math.random() * 100 - 50;
-            this.y = Math.random() * 100 - 50;
-            this.hue = Math.random() * 20; // Red hues
-            this.opacity = Math.random() * 0.3 + 0.1;
+            this.x = Math.random() * 150 - 75;
+            this.y = Math.random() * 150 - 75;
+            this.glitchX = 0;
+            this.glitchY = 0;
             this.lit = false;
             this.litTime = 0;
         }
 
         get screenX() {
-            return this.cluster.x + this.x;
+            return this.cluster.x + this.x + this.glitchX;
         }
 
         get screenY() {
-            return this.cluster.y + this.y;
+            return this.cluster.y + this.y + this.glitchY;
         }
 
-        draw(clusterOpacity) {
-            let currentOpacity = this.opacity * clusterOpacity;
-            let color = `hsla(${this.hue}, 100%, 50%, ${currentOpacity})`; // Red color
-            if (this.lit) {
-                const litProgress = this.litTime / 600;
-                const litOpacity = Math.sin(litProgress * Math.PI) * 0.7;
-                color = `hsla(${this.hue}, 100%, 80%, ${litOpacity})`; // Brighter red
-            }
-            ctx.fillStyle = color;
-            ctx.fillRect(this.screenX, this.screenY, 1.5, 1.5);
+        draw() {
+                                                ctx.fillStyle = this.lit ? '#FA0000' : '#333333'; // Red or Charcoal
+            ctx.fillRect(this.screenX, this.screenY, 2, 2);
         }
 
         update(delta) {
+            // Glitch effect
+            if (Math.random() < 0.05) {
+                this.glitchX = (Math.random() - 0.5) * 4;
+                this.glitchY = (Math.random() - 0.5) * 4;
+            } else {
+                this.glitchX = 0;
+                this.glitchY = 0;
+            }
+
             if (this.lit) {
                 this.litTime -= delta;
                 if (this.litTime <= 0) {
@@ -61,36 +89,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Cluster Class ---
     class Cluster {
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.lifetime = Math.random() * 12000 + 8000;
+            this.vx = (Math.random() - 0.5) * 0.3;
+            this.vy = (Math.random() - 0.5) * 0.3;
+            this.lifetime = Math.random() * 20000 + 15000;
             this.age = 0;
             this.particles = [];
+            this.staticConnections = [];
+
             for (let i = 0; i < particlesPerCluster; i++) {
                 const p = new Particle(this);
                 this.particles.push(p);
                 allParticles.push(p);
             }
+
+            // Create static connections within the cluster
+            for (let i = 0; i < this.particles.length; i++) {
+                const p1 = this.particles[i];
+                const p2 = this.particles[(i + 1) % this.particles.length];
+                const p3 = this.particles[(i + 2) % this.particles.length];
+                this.staticConnections.push([p1, p2]);
+                this.staticConnections.push([p1, p3]);
+            }
         }
 
         update(delta) {
             this.age += delta;
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
             this.particles.forEach(p => p.update(delta));
         }
 
         draw() {
-            const opacity = Math.sin(this.age / this.lifetime * Math.PI) * baseOpacity;
-            this.particles.forEach(p => p.draw(opacity));
+            this.drawStaticConnections();
+            this.particles.forEach(p => p.draw());
+        }
+
+        drawStaticConnections() {
+            ctx.strokeStyle = 'rgba(51, 51, 51, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]); // Solid lines
+
+            this.staticConnections.forEach(conn => {
+                const p1 = conn[0];
+                const p2 = conn[1];
+                ctx.beginPath();
+                ctx.moveTo(p1.screenX, p1.screenY);
+                ctx.lineTo(p2.screenX, p2.screenY);
+                ctx.stroke();
+            });
         }
     }
 
+    // --- Connection Class ---
     class Connection {
         constructor(p1, p2) {
             this.p1 = p1;
             this.p2 = p2;
-            this.lifetime = 500;
+            this.lifetime = 600;
             this.age = 0;
         }
 
@@ -99,22 +163,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         draw() {
-            const opacity = 0.5 - this.age / this.lifetime;
+            const opacity = 0.8 - (this.age / this.lifetime);
             const p1 = this.p1;
             const p2 = this.p2;
 
             ctx.beginPath();
             ctx.moveTo(p1.screenX, p1.screenY);
             ctx.lineTo(p2.screenX, p2.screenY);
-
-            // Glow effect
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = `rgba(255, 0, 0, ${opacity * 0.05})`; // Red glow
-            ctx.stroke();
-
+            
+            const isLit = p1.lit && p2.lit;
+                                                ctx.strokeStyle = isLit ? `rgba(250, 0, 0, ${opacity})` : `rgba(51, 51, 51, ${opacity * 0.5})`;
             ctx.lineWidth = 1;
-            ctx.strokeStyle = `rgba(255, 50, 50, ${opacity * 0.1})`; // Red glow
+            ctx.setLineDash([1, 3]);
             ctx.stroke();
+            ctx.setLineDash([]); // Reset
         }
     }
 
@@ -133,7 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
             initiator.lit = true;
             initiator.litTime = 600;
 
-            const numConnections = Math.min(Math.floor(Math.abs(editSize) / 50), 10) + 2;
+            // Create sparks
+            for (let i = 0; i < 5; i++) {
+                sparks.push(new Spark(initiator.screenX, initiator.screenY));
+            }
+
+                        const numConnections = Math.min(Math.floor(Math.abs(editSize) / 50), 5) + 1;
             for (let i = 0; i < numConnections; i++) {
                 const partner = allParticles[Math.floor(Math.random() * allParticles.length)];
                 if (partner && partner !== initiator) {
@@ -141,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         partner.lit = true;
                         partner.litTime = 600;
                         connections.push(new Connection(initiator, partner));
-                    }, Math.random() * 250);
+                    }, Math.random() * 300);
                 }
             }
         }
@@ -161,18 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const delta = time - lastTime;
         lastTime = time;
 
-        ctx.fillStyle = '#000000'; // Black background
+        ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
 
         clusters.forEach((c, i) => {
             c.update(delta);
             if (c.age > c.lifetime) {
                 c.particles.forEach(p => {
                     const index = allParticles.indexOf(p);
-                    if (index > -1) {
-                        allParticles.splice(index, 1);
-                    }
+                    if (index > -1) allParticles.splice(index, 1);
                 });
                 clusters[i] = new Cluster();
             }
@@ -185,6 +249,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 connections.splice(i, 1);
             } else {
                 conn.draw();
+            }
+        });
+        
+        sparks.forEach((spark, i) => {
+            spark.update(delta);
+            if (spark.age > spark.lifetime) {
+                sparks.splice(i, 1);
+            } else {
+                spark.draw();
             }
         });
 
