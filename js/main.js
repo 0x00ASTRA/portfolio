@@ -81,4 +81,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+
+    // Initialize Mermaid
+    mermaid.initialize({
+        startOnLoad: true,
+        look: 'default',
+        theme: 'base',
+        themeVariables: {
+            primaryColor: '#0f0f0f',
+            primaryTextColor: '#fff',
+            primaryBorderColor: '#FA0000',
+            lineColor: '#FA0000',
+            secondaryColor: '#bab3b3',
+            tertiaryColor: '#f5f5f5',
+        },
+        // flowchart: {
+        //     useMaxWidth: true, // Use max width for responsiveness
+        // },
+    });
+    mermaid.run();
+
+    });

@@ -6,10 +6,12 @@ window.startResumePageDecoding = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     
+    
+    
 
     const elementsToAnimate = Array.from(document.querySelectorAll(
         '.content h1, .content h2, .content h3, .content p, .content a, .content span, .content li'
-    ));
+    )).filter(element => !element.closest('pre'));
 
     const isLowPerformance = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
     const maxAnimatedChars = 1000; // Skip animation for very large texts on low-performance devices
@@ -43,6 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 display[i] = revealed[i] ? originalText[i] : "01"[Math.random() * 2 | 0];
             }
             element.textContent = display.join('');
+        }
+    });
+
+    // Convert Mermaid code blocks to div.mermaid immediately
+    document.querySelectorAll('pre code').forEach(codeBlock => {
+        const code = codeBlock.textContent.trim();
+        // Check if the code block contains Mermaid syntax
+        if (code.startsWith('graph') || code.startsWith('sequenceDiagram') || code.startsWith('gantt') || code.startsWith('classDiagram') || code.startsWith('stateDiagram') || code.startsWith('pie') || code.startsWith('erDiagram') || code.startsWith('journey') || code.startsWith('flowchart') || code.startsWith('gitGraph')) {
+            const mermaidDiv = document.createElement('div');
+            mermaidDiv.classList.add('mermaid');
+            mermaidDiv.textContent = code;
+            codeBlock.parentNode.parentNode.replaceChild(mermaidDiv, codeBlock.parentNode);
         }
     });
 
@@ -87,7 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
             element.textContent = display.join('');
         });
 
-        if (!allComplete) requestAnimationFrame(animate);
+        if (!allComplete) {
+            requestAnimationFrame(animate);
+        } else {
+            
+        }
     }
 
     requestAnimationFrame(animate);

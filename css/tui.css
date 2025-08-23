@@ -28,7 +28,7 @@ img {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 2rem auto; /* Added margin for spacing */
     padding: 2rem;
     background-color: rgba(255, 255, 255, 0.2); /* More transparent */
@@ -96,6 +96,7 @@ header nav a {
 
 main {
     padding: 2rem 0;
+    overflow-x: auto; /* Allow horizontal scrolling for overflowing content */
 }
 
 main .input-box h1 {
@@ -286,4 +287,11 @@ blockquote {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+
+.mermaid {
+    height: auto;
+    text-align: center; /* Center the diagram if it's smaller than its container */
+    margin: 1rem auto; /* Add some vertical margin and center horizontally */
 }
